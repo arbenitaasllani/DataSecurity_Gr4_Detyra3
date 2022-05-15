@@ -30,3 +30,28 @@ public class Client {
     }
 
 }
+public String decrypt(String encryptedMessage) throws Exception {
+        byte[] messageInBytes = decode(encryptedMessage);
+        Cipher decryptionCipher = Cipher.getInstance("AES/GCM/NoPadding");
+        GCMParameterSpec spec = new GCMParameterSpec(T_LEN, IV);
+        decryptionCipher.init(Cipher.DECRYPT_MODE, key, spec);
+        byte[] decryptedBytes = decryptionCipher.doFinal(messageInBytes);
+        return new String(decryptedBytes);
+        }
+
+
+private byte[] decode(String data) {
+        return Base64.getDecoder().decode(data);
+        }
+
+
+public static void main(String[] args) {
+        try {
+        Client client = new Client();
+        client.initFromStrings("CHuO1Fjd8YgJqTyapibFBQ==","e3IYYJC2hxe24/EO");
+        String decryptedMessage = client.decrypt("mqQQF6K2GEaR0JKTd1yN58Mbs7qeYamM0xgung==");
+        System.err.println("Decrypted Message : " + decryptedMessage);
+        } catch (Exception ignored) {
+        }
+        }
+        }
