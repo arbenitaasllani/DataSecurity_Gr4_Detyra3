@@ -28,3 +28,32 @@ public class Server {
         key = new SecretKeySpec(decode(secretKey), "AES");
         this.IV = decode(IV);
     }
+public String encrypt(String message) throws Exception {
+        byte[] messageInBytes = message.getBytes();
+        Cipher encryptionCipher = Cipher.getInstance("AES/GCM/NoPadding");
+        GCMParameterSpec spec = new GCMParameterSpec(T_LEN, IV);
+        encryptionCipher.init(Cipher.ENCRYPT_MODE, key, spec);
+        byte[] encryptedBytes = encryptionCipher.doFinal(messageInBytes);
+        return encode(encryptedBytes);
+    }
+
+
+    private String encode(byte[] data) {
+        return Base64.getEncoder().encodeToString(data);
+    }
+
+    private byte[] decode(String data) {
+        return Base64.getDecoder().decode(data);
+    }
+
+
+    public static void main(String[] args) {
+        try {
+            Server server = new Server();
+            server.initFromStrings("CHuO1Fjd8YgJqTyapibFBQ==", "e3IYYJC2hxe24/EO");
+            String encryptedMessage = server.encrypt("TheXCoders_2");
+            System.err.println("Encrypted Message : " + encryptedMessage);
+        } catch (Exception ignored) {
+        }
+    }
+}
